@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Demo.ApiGateway.Core.Databases
+namespace Demo.ApiGateway.Core.DbConfiguration
 {
     public class MySqlOcelotDbConfiguration : OcelotDbConfigurationBase
     {

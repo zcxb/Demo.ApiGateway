@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Demo.ApiGateway.Core.Databases;
+using Demo.ApiGateway.Core.DbConfiguration;
 using Demo.ApiGateway.Ocelot;
-using Demo.ApiGateway.Ocelot.Configurations;
+using Demo.ApiGateway.Ocelot.Configuration.FileConfigurationRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +23,8 @@ namespace Demo.ApiGateway
             services.AddOcelot().ConfigureOcelotFromDatabase<MySqlOcelotDbConfiguration, MySqlFileConfigurationRepository>(options =>
             {
                 options.ConnectionString = "Server=localhost; Port=3306; Database=test; Uid=root; Pwd=123456;";
+                options.EnableTimer = true;
+                options.TimerDelay = 10 * 1000;
             });
         }
 

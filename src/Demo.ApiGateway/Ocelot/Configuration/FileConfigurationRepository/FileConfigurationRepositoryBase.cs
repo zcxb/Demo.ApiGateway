@@ -1,4 +1,4 @@
-﻿using Demo.ApiGateway.Core.Databases;
+﻿using Demo.ApiGateway.Core.DbConfiguration;
 using Demo.ApiGateway.Extensions;
 using Ocelot.Configuration.File;
 using Ocelot.Configuration.Repository;
@@ -8,15 +8,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Demo.ApiGateway.Ocelot.Configurations
+namespace Demo.ApiGateway.Ocelot.Configuration.FileConfigurationRepository
 {
     public class FileConfigurationRepositoryBase<TDatabaseConfiguration> : IFileConfigurationRepository
         where TDatabaseConfiguration : OcelotDbConfigurationBase
     {
-        private readonly OcelotDatabaseConfiguration _configuration;
+        private readonly OcelotDbConfiguration _configuration;
         private readonly TDatabaseConfiguration _databaseConfiguration;
 
-        public FileConfigurationRepositoryBase(OcelotDatabaseConfiguration configuration,
+        public FileConfigurationRepositoryBase(OcelotDbConfiguration configuration,
                                                TDatabaseConfiguration databaseConfiguration)
         {
             _configuration = configuration;

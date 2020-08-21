@@ -1,5 +1,5 @@
-﻿using Demo.ApiGateway.Core.Databases;
-using Demo.ApiGateway.Ocelot.Configurations;
+﻿using Demo.ApiGateway.Core.DbConfiguration;
+using Demo.ApiGateway.Ocelot.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,31 +70,25 @@ namespace Demo.ApiGateway.Ocelot
         private static IApplicationBuilder CreateOcelotPipeline(IApplicationBuilder builder, OcelotPipelineConfiguration pipelineConfiguration)
         {
             builder.BuildOcelotPipeline(pipelineConfiguration);
-
-            /*
-            inject first delegate into first piece of asp.net middleware..maybe not like this
-            then because we are updating the http context in ocelot it comes out correct for
-            rest of asp.net..
-            */
-
             builder.Properties["analysis.NextMiddlewareName"] = "TransitionToOcelotMiddleware";
-
             return builder;
         }
 
         public static IOcelotBuilder ConfigureOcelotFromDatabase<TDatabaseConfiguration, TFileConfigurationRepository>
-            (this IOcelotBuilder builder, Action<OcelotDatabaseConfiguration> option)
+            (this IOcelotBuilder builder, Action<OcelotDbConfiguration> option)
             where TDatabaseConfiguration : OcelotDbConfigurationBase
             where TFileConfigurationRepository : class, IFileConfigurationRepository
         {
             builder.Services.Configure(option);
             //配置信息
             builder.Services.AddSingleton(
-                resolver => resolver.GetRequiredService<IOptions<OcelotDatabaseConfiguration>>().Value);
+                resolver => resolver.GetRequiredService<IOptions<OcelotDbConfiguration>>().Value);
             builder.Services.AddSingleton<TDatabaseConfiguration>();
             //配置文件仓储注入
             builder.Services.AddSingleton<TFileConfigurationRepository>();
             builder.Services.AddSingleton<IFileConfigurationRepository, TFileConfigurationRepository>();
+            //定时同步
+            builder.Services.AddHostedService<DbConfigurationPoller>();
             return builder;
         }
 
